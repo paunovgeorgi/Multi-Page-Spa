@@ -1,16 +1,30 @@
 import React from 'react'
-import { useParams } from 'react-router'
+import { useLoaderData} from 'react-router-dom'
+import EventItem from '../EventItem';
 
 const EventDetails = () => {
 
-  const params = useParams();
+  const data = useLoaderData();
+  const event = data.event;
+  
 
   return (
     <>
-      <h1>EventDetails</h1>
-      <h2>{params.eventId}</h2>
+      <EventItem event={event}/> 
     </>
   )
 }
 
 export default EventDetails
+
+export async function loader({request, params}) {
+
+  const id = params.eventId;
+  const response = await fetch(`http://localhost:8080/events/${id}`);
+
+  if (!response.ok) {
+    throw new Response(JSON.stringify({message: 'Count not fecth event!'}), {status: 500}); 
+  }else{
+    return response;
+  }
+}

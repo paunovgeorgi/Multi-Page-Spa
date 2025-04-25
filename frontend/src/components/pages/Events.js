@@ -1,41 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import EventItem from '../EventItem'
-import { Link } from 'react-router'
 
-const DUMMY_EVENTS = [
-  {
-    id: 'e1',
-    title: 'My First Event',
-    description: 'this is my first event ever',
-    image: 'no image available',
-    date: 'the best date mate'
-  },
-  {
-    id: 'e2',
-    title: 'My Second Event',
-    description: 'this is my second event ever',
-    image: 'no image available',
-    date: 'the bes second date mate'
-  },
+import { useLoaderData} from 'react-router';
+import EventsList from '../EventsList';
 
-]
-
-const Events = () => {
-
-
+function Events() {
+ 
+  const data = useLoaderData();
+  const events = data.events;
 
   return (
-    <div>
-    <h1>Events</h1>
-    <ul>
-      {DUMMY_EVENTS.map((event) => 
-      <li key={event.id}>
-        <Link to={event.id}>{event.title}</Link>
-      </li>
-      )}
-    </ul>
-    </div>
-  )
+      <EventsList events={events} />
+  );
 }
 
-export default Events
+export default Events;
+
+export const loader = async () => {
+  const response = await fetch('http://localhost:8080/events');
+
+  if (!response.ok) {
+    throw new Response(JSON.stringify({message: 'Count not fetch events!'}),
+     {status: 500});
+
+  } else {
+    return response;
+  }
+};
