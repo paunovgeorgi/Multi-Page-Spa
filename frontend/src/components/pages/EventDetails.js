@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLoaderData, useRouteLoaderData} from 'react-router'
+import { redirect, useLoaderData, useRouteLoaderData} from 'react-router'
 import EventItem from '../EventItem';
 
 const EventDetails = () => {
@@ -27,4 +27,18 @@ export async function loader({request, params}) {
   }else{
     return response;
   }
+}
+
+export async function action({request, params}){
+  const id = params.eventId;
+
+  const response = await fetch(`http://localhost:8080/events/${id}`, {
+    method: request.method
+  });
+
+  if (!response.ok) {
+    throw new Response(JSON.stringify({message: 'Count not delete event.'}), {status: 500}); 
+  }
+
+  return redirect('/events');  
 }

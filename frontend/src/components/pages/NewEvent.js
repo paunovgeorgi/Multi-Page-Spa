@@ -15,7 +15,6 @@ export async function action({request, params}){
   const data = await request.formData();
   console.log(data);
   
-
   const eventData = {
     title: data.get('title'), 
     image: data.get('image'),
